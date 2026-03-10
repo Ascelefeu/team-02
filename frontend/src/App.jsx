@@ -1,43 +1,74 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import './App.css';
 
 function App() {
-  // État pour les annonces (API 1)
   const [annonces, setAnnonces] = useState([]);
-  // État pour la messagerie (API 2)
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Appel à l'API 1 pour les annonces
+    fetch('/api1/annonces')
+      .then(res => res.json())
+      .then(data => setAnnonces(data))
+      .catch(err => console.error('Erreur API 1:', err));
+
+    // Appel à l'API 2 pour les messages
+    fetch('/api2/messages')
+      .then(res => res.json())
+      .then(data => setMessages(data))
+      .catch(err => console.error('Erreur API 2:', err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <div className="loading">Chargement...</div>;
+  }
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>🌍 Recyclage de Quartier</h1>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-        
-        {/* SECTION API 1 : ANNONCES */}
-        <section style={{ border: '1px solid #ccc', padding: '15px' }}>
-          <h2>📦 Objets à donner (API 1)</h2>
-          <form style={{ marginBottom: '20px' }}>
-            <input type="text" placeholder="Nom de l'objet" />
-            <button type="submit">Poster</button>
-          </form>
-          <ul>
-            {annonces.map((item, i) => <li key={i}>{item.name}</li>)}
-            {annonces.length === 0 && <p>Aucune annonce pour le moment.</p>}
-          </ul>
+    <div className="app">
+      <header>
+        <h1>♻️ Recyclage de Quartier</h1>
+      </header>
+
+      <main>
+        {/* Section Annonces - API 1 */}
+        <section className="annonces">
+          <h2>📦 Objets à donner</h2>
+          {annonces.map((annonce) => (
+            <div key={annonce._id} className="card">
+              <h3>{annonce.title}</h3>
+              <p>{annonce.description}</p>
+              <div className="meta">
+                <span>📍 {annonce.location}</span>
+                <span>👤 {annonce.donateur}</span>
+                <span className={`status ${annonce.status}`}>{annonce.status}</span>
+              </div>
+            </div>
+          ))}
+          {annonces.length === 0 && <p className="empty">Aucune annonce disponible</p>}
         </section>
 
-        {/* SECTION API 2 : MESSAGERIE */}
-        <section style={{ border: '1px solid #ccc', padding: '15px' }}>
-          <h2>💬 Messagerie (API 2)</h2>
-          <div style={{ height: '200px', overflowY: 'scroll', background: '#f9f9f9', marginBottom: '10px' }}>
-             {/* Les messages s'afficheront ici */}
-          </div>
-          <input type="text" placeholder="Votre message..." />
-          <button>Envoyer</button>
+        {/* Section Messages - API 2 */}
+        <section className="messages">
+          <h2>💬 Messages</h2>
+          {messages.map((msg) => (
+            <div key={msg._id} className="card">
+              <div className="message-header">
+                <strong>{msg.sender}</strong> → {msg.receiver}
+              </div>
+              <p className="message-subject">Re: {msg.annonceTitle}</p>
+              <p>{msg.message}</p>
+              <span className="timestamp">{new Date(msg.timestamp).toLocaleString('fr-FR')}</span>
+            </div>
+          ))}
+          {messages.length === 0 && <p className="empty">Aucun message</p>}
         </section>
-
-      </div>
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
+
+

@@ -1,12 +1,16 @@
-version: '3.8'
-
 services:
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
     volumes:
-      - ./frontend/src:/app/src   # Hot reload via bind mount 
+      - ./frontend:/app         # Le Bind Mount : lie ton code local au conteneur 
+      - /app/node_modules       # Empêche Docker d'écraser tes modules installés
+    ports:
+      - "5173:5173"             # Port par défaut de Vite
     networks:
       - frontend-net
+    command: sh -c "npm install && npm run dev -- --host"
 
   api1:
     build: ./api1
@@ -17,9 +21,12 @@ services:
       - db1
 
   db1:
-    image: postgres:15-alpine
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
-      - api1-db-data:/var/lib/postgresql/data # Persistance 
+      - api1-db-data:/data/db # Persistance des données [cite: 54]
     networks:
       - backend1-net
 
@@ -32,9 +39,12 @@ services:
       - db2
 
   db2:
-    image: postgres:15-alpine
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
-      - api2-db-data:/var/lib/postgresql/data # Persistance 
+      - api2-db-data:/data/db
     networks:
       - backend2-net
 
