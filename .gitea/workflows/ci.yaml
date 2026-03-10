@@ -1,0 +1,10 @@
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scan avec Trivy
+        uses: aquasec/trivy-action@master
+        with:
+          image-ref: 'ton-image:latest'
+          severity: 'MEDIUM,HIGH,CRITICAL' # Bloquer si vulnérabilités [cite: 59]
+          exit-code: '1'

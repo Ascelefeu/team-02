@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend/src:/app/src   # Hot reload via bind mount 
+    networks:
+      - frontend-net
+
+  api1:
+    build: ./api1
+    networks:
+      - frontend-net
+      - backend1-net
+    depends_on:
+      - db1
+
+  db1:
+    image: postgres:15-alpine
+    volumes:
+      - api1-db-data:/var/lib/postgresql/data # Persistance 
+    networks:
+      - backend1-net
+
+  api2:
+    build: ./api2
+    networks:
+      - frontend-net
+      - backend2-net
+    depends_on:
+      - db2
+
+  db2:
+    image: postgres:15-alpine
+    volumes:
+      - api2-db-data:/var/lib/postgresql/data # Persistance 
+    networks:
+      - backend2-net
+
+networks:
+  frontend-net:
+  backend1-net:
+  backend2-net:
+
+volumes:
+  api1-db-data:
+  api2-db-data:
