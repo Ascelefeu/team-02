@@ -1,19 +1,21 @@
-# Dockerfile pour ./api2/Dockerfile
-FROM python:3.11-slim
-
-RUN addgroup --system appgroup && adduser --system --group appuser
-
+# Builder stage
+FROM python:3.11 AS builder
 WORKDIR /app
-
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Runtime stage
+FROM python:3.11-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-RUN chown -R appuser:appgroup /app
+# Copy both site-packages AND bin executables (uvicorn, etc.)
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin/uvicorn /usr/local/bin/uvicorn
 
+COPY src/ ./src/
+RUN useradd -m appuser
 USER appuser
-
-HEALTHCHECK --interval=30s CMD curl -f http://localhost:5001/health || exit 1
-
-CMD ["python", "app.py"]
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:8000/health || exit 1
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
