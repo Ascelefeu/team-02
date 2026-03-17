@@ -1,52 +1,103 @@
 services:
+
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend:/app         # Le Bind Mount : lie ton code local au conteneur 
-      - /app/node_modules       # Empêche Docker d'écraser tes modules installés
+      - ./frontend:/app
+      - /app/node_modules
     ports:
-      - "5173:5173"             # Port par défaut de Vite
+      - "5173:5173"
     networks:
       - frontend-net
     command: sh -c "npm install && npm run dev -- --host"
 
   api1:
     build: ./api1
+    environment:
+      - MONGO_URL=mongodb://admin:password@db1:27017/?authSource=admin
+      - MONGO_DB_NAME=annonces
     networks:
       - frontend-net
       - backend1-net
     depends_on:
-      - db1
+      db1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   db1:
-    image: mongo:latest
+    image: mongo:7.0-jammy          
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
-      - api1-db-data:/data/db # Persistance des données [cite: 54]
+      - api1-db-data:/data/db
     networks:
-      - backend1-net
+      - backend1-net                
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')", "-u", "admin", "-p", "password", "--authenticationDatabase", "admin"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   api2:
     build: ./api2
+    environment:
+      - MONGO_URL=mongodb://admin:password@db2:27017/?authSource=admin
+      - MONGO_DB_NAME=messagerie
+      - REDIS_URL=redis://redis:6379
     networks:
       - frontend-net
       - backend2-net
     depends_on:
-      - db2
+      db2:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   db2:
-    image: mongo:latest
+    image: mongo:7.0-jammy          # version épinglée
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - api2-db-data:/data/db
     networks:
-      - backend2-net
+      - backend2-net                # ISOLÉE : pas sur backend1-net
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')", "-u", "admin", "-p", "password", "--authenticationDatabase", "admin"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:7.2-alpine         
+    container_name: redis-queue
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend2-net                
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   frontend-net:
@@ -56,3 +107,4 @@ networks:
 volumes:
   api1-db-data:
   api2-db-data:
+  redis-data:
