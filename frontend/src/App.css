@@ -66,6 +66,99 @@ section h2 {
   color: #333;
 }
 
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.action-btn,
+.secondary-btn,
+.submit-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.action-btn,
+.submit-btn {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.secondary-btn {
+  background: #eceff1;
+  color: #263238;
+}
+
+.action-btn:hover,
+.submit-btn:hover {
+  background: #1b5e20;
+}
+
+.secondary-btn:hover {
+  background: #dce3e6;
+}
+
+.form-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.form-card input,
+.form-card textarea {
+  border: 1px solid #c7d0d4;
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.form-card textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.inbox-tools {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.inbox-tools input {
+  flex: 1;
+  border: 1px solid #c7d0d4;
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+}
+
+.error {
+  color: #b71c1c;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  padding: 0.65rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 0.8rem;
+}
+
+.info {
+  color: #0d47a1;
+  background: #e3f2fd;
+  border: 1px solid #bbdefb;
+  padding: 0.65rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 0.8rem;
+}
+
 .card {
   background: white;
   padding: 1.5rem;
@@ -136,6 +229,15 @@ section h2 {
 @media (max-width: 768px) {
   main {
     grid-template-columns: 1fr;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inbox-tools {
+    flex-direction: column;
   }
   
   header {
