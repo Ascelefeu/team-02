@@ -14,7 +14,9 @@ services:
     command: sh -c "npm install && npm run dev -- --host"
 
   api1:
-    build: ./api1
+    build:
+      context: ./api1
+      dockerfile: DOCKERFILE
     environment:
       - MONGO_URL=mongodb://admin:password@db1:27017/?authSource=admin
       - MONGO_DB_NAME=annonces
@@ -32,7 +34,7 @@ services:
       start_period: 15s
 
   db1:
-    image: mongo:7.0-jammy          
+    image: mongo:8.2
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
@@ -69,7 +71,7 @@ services:
       start_period: 15s
 
   db2:
-    image: mongo:7.0-jammy          # version épinglée
+    image: mongo:8.2
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
