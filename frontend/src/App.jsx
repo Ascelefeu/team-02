@@ -268,7 +268,7 @@ function App() {
               className="action-btn"
               onClick={() => setMessageFormOpen(prev => !prev)}
             >
-              {messageFormOpen ? 'Fermer' : 'Ajouter un message'}
+              {messageFormOpen ? 'Fermer' : 'Envoyer un message'}
             </button>
           </div>
 
