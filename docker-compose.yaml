@@ -14,9 +14,11 @@ services:
     command: sh -c "npm install && npm run dev -- --host"
 
   api1:
+    ports:
+      - "8000:8000"
     build:
       context: ./api1
-      dockerfile: DOCKERFILE
+      dockerfile: Dockerfile
     environment:
       - MONGO_URL=mongodb://admin:password@db1:27017/?authSource=admin
       - MONGO_DB_NAME=annonces
