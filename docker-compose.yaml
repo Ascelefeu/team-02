@@ -22,6 +22,7 @@ services:
     environment:
       - MONGO_URL=mongodb://admin:password@db1:27017/?authSource=admin
       - MONGO_DB_NAME=annonces
+      - JWT_SECRET=super_secret_key_partagee
     networks:
       - frontend-net
       - backend1-net
@@ -52,11 +53,14 @@ services:
       start_period: 30s
 
   api2:
+    ports:
+        - "8001:8000"
     build: ./api2
     environment:
       - MONGO_URL=mongodb://admin:password@db2:27017/?authSource=admin
       - MONGO_DB_NAME=messagerie
       - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=super_secret_key_partagee
     networks:
       - frontend-net
       - backend2-net

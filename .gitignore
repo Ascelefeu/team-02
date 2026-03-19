@@ -19,3 +19,8 @@ env/
 # Fichiers Docker temporaires ou volumes locaux
 docker-data/
 *.log
+# Fichiers de test API (JSON)
+login.json
+pirate_login.json
+body.json
+*.json_test

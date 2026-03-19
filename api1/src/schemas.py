@@ -7,7 +7,7 @@ class AnnonceCreate(BaseModel):
     objet: str
     contenu: str
     lieu_annonce: str
-    user_pseudo: str
+    user_pseudo: Optional[str] = None  # ← optionnel, injecté via JWT
     date_fin: Optional[datetime] = None
 
 class AnnonceUpdate(BaseModel):
