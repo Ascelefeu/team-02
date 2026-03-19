@@ -2,9 +2,15 @@ jobs:
   build-and-scan:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t api1:latest ./api1
+
       - name: Scan avec Trivy
         uses: aquasec/trivy-action@master
         with:
-          image-ref: 'ton-image:latest'
-          severity: 'MEDIUM,HIGH,CRITICAL' # Bloquer si vulnérabilités [cite: 59]
+          image-ref: 'api1:latest' # On utilise le nom défini au-dessus
+          severity: 'MEDIUM,HIGH,CRITICAL' # Bloquer si vulnérabilités
           exit-code: '1'
