@@ -128,9 +128,56 @@ section h2 {
   resize: vertical;
 }
 
-.inbox-tools {
+.auth-panel {
+  gap: 0.9rem;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.auth-tab {
+  border: 1px solid #b0bec5;
+  background: #f5f7f8;
+  color: #37474f;
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-tab.active {
+  background: #1b5e20;
+  color: #fff;
+  border-color: #1b5e20;
+}
+
+.auth-form {
   display: flex;
-  gap: 0.6rem;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.auth-connected {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.readonly-field {
+  border: 1px dashed #9aaeb7;
+  background: #f6fbfc;
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+  color: #29434e;
+  font-size: 0.95rem;
+}
+
+.inbox-tools {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
@@ -237,7 +284,7 @@ section h2 {
   }
 
   .inbox-tools {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
   
   header {
