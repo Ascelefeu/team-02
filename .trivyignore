@@ -1,0 +1,20 @@
+# OS-level CVEs with no fix available in Debian 12 (will_not_fix / no fixed version)
+# These cannot be resolved by upgrading packages - awaiting upstream Debian patches
+CVE-2025-10148
+CVE-2026-1965
+CVE-2026-3783
+CVE-2026-3784
+CVE-2025-30258
+CVE-2025-68972
+CVE-2026-0861
+CVE-2025-15281
+CVE-2026-0915
+CVE-2023-2953
+CVE-2023-50495
+CVE-2024-10041
+CVE-2025-7458
+CVE-2025-7709
+CVE-2026-4105
+CVE-2025-13151
+CVE-2023-45853
+CVE-2026-27171
