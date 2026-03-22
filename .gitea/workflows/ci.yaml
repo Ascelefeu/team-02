@@ -24,13 +24,13 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
       - name: Scan api1 with Trivy
-        run: trivy image --exit-code 1 --severity MEDIUM,HIGH,CRITICAL api1:latest
+        run: trivy image --exit-code 1 --severity MEDIUM,HIGH,CRITICAL --ignorefile .trivyignore api1:latest
 
       - name: Scan api2 with Trivy
-        run: trivy image --exit-code 1 --severity MEDIUM,HIGH,CRITICAL api2:latest
+        run: trivy image --exit-code 1 --severity MEDIUM,HIGH,CRITICAL --ignorefile .trivyignore api2:latest
 
       - name: Scan frontend with Trivy
-        run: trivy image --exit-code 1 --severity MEDIUM,HIGH,CRITICAL frontend:latest
+        run: trivy image --exit-code 1 --severity MEDIUM,HIGH,CRITICAL --ignorefile .trivyignore frontend:latest
 
   build-and-push:
     runs-on: ubuntu-latest
