@@ -2,6 +2,7 @@
 FROM node:20-alpine
 
 # Sécurité : Création d'un utilisateur non-root
+RUN apk upgrade --no-cache
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
