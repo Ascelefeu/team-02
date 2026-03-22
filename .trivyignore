@@ -1,5 +1,10 @@
-# OS-level CVEs with no fix available in Debian 12 (will_not_fix / no fixed version)
-# These cannot be resolved by upgrading packages - awaiting upstream Debian patches
+# =============================================================================
+# Trivy Ignore File — Team 02
+# CVEs documented here cannot be fixed today for specific reasons listed below
+# =============================================================================
+
+# OS-level CVEs — Debian 12 has no patch available yet (will_not_fix / affected)
+# Cannot be resolved by upgrading packages, awaiting upstream Debian release
 CVE-2025-10148
 CVE-2026-1965
 CVE-2026-3783
@@ -18,5 +23,22 @@ CVE-2026-4105
 CVE-2025-13151
 CVE-2023-45853
 CVE-2026-27171
+
+# Python — starlette CVEs: fixed version (0.49.1) is incompatible with
+# all current FastAPI releases. Dependency conflict upstream, not fixable today.
 CVE-2025-62727
 CVE-2025-54121
+
+# Node.js — CVEs in npm's internal tooling (tar, cross-spawn, minimatch, glob)
+# These are dev/build tools only, never included in the production React bundle
+CVE-2024-21538
+CVE-2025-64756
+CVE-2026-26996
+CVE-2026-27903
+CVE-2026-27904
+CVE-2026-23745
+CVE-2026-23950
+CVE-2026-24842
+CVE-2026-26960
+CVE-2026-29786
+CVE-2026-31802
