@@ -1,7 +1,8 @@
 import os
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
+import jwt
+from jwt.exceptions import InvalidTokenError
 
 SECRET_KEY = os.getenv("JWT_SECRET", "dev_secret_key_non_securisee_a_changer")
 ALGORITHM = "HS256"
@@ -15,11 +16,11 @@ async def get_current_user_pseudo(token: str = Depends(oauth2_scheme)) -> str:
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        pseudo: str = payload.get("sub") 
+        pseudo: str = payload.get("sub")
         if pseudo is None:
             raise HTTPException(status_code=401, detail="Token invalide : pseudo manquant")
         return pseudo
-    except JWTError:
+    except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token invalide ou expiré",
